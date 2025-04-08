@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+</head>
+<body>
+<p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}">VALUE</p>
+<p th:text="${book.getId()}">VALUE</p>
+
+
+<br/>
+<hr/>
+
+<!-- Выпадающий список людей -->
+<form th:action="@{/books/{id}/assign(id=${book.getId()})}" method="post">
+    <label for="personSelect">Select person:</label>
+    <select id="personSelect" name="personId">
+        <option value="" disabled selected>-- select person --</option>
+        <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getName()}"></option>
+    </select>
+
+    <button type="submit">submit</button>
+</form>
+
+
+<br/>
+<hr/>
+
+<a th:href="@{/books/{id}/edit(id=${book.getId()})}">Edit</a>
+
+<form th:method="DELETE" th:action="@{/books/{id}(id=${book.getId()})}">
+    <input type="submit" value="Delete"/>
+</form>
+</body>
+</html>
