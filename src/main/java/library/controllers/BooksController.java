@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/books")
 public class BooksController {
@@ -26,9 +28,41 @@ public class BooksController {
         this.peopleService = peopleService;
     }
 
-    @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("books", bookService.findAll());
+//    @GetMapping()
+//    public String index(Model model) {
+//        model.addAttribute("books", bookService.findAll());
+//        return "books/index";
+//    }
+
+//    @GetMapping
+//    public String index(Model model, @RequestParam(value = "page", required = false) Integer  page,
+//                        @RequestParam(value = "books_per_page", required = false) Integer  booksPerPage) {
+//
+//        if (page != null && booksPerPage != null) {
+//            model.addAttribute("books", bookService.findWithPagination(page, booksPerPage));
+//        }else {
+//            model.addAttribute("books", bookService.findAll());
+//        }
+//
+//        return "books/index";
+//    }
+
+    @GetMapping
+    public String index(Model model,
+                        @RequestParam(value = "page", required = false) Integer  page,
+                        @RequestParam(value = "books_per_page", required = false) Integer  booksPerPage,
+                        @RequestParam(value = "sort_by_year", required = false) Boolean sortByYear
+                        ) {
+        if (page != null && booksPerPage != null && Boolean.TRUE.equals(sortByYear)) {
+            model.addAttribute("books", bookService.findAllWithPaginationAndSort(page, booksPerPage));
+        } else if (page != null && booksPerPage != null) {
+            model.addAttribute("books", bookService.findWithPagination(page, booksPerPage));
+        } else if (Boolean.TRUE.equals(sortByYear)) {
+            model.addAttribute("books", bookService.findWithSortByYear());
+        } else {
+            model.addAttribute("books", bookService.findAll());
+        }
+
         return "books/index";
     }
 
@@ -38,10 +72,24 @@ public class BooksController {
         return "books/new";
     }
 
+    @GetMapping("/search")
+    public String searchBooks() {
+        return "books/search";
+    }
+
+    @PostMapping("/search")
+    public String search(@RequestParam("query") String query, Model model) {
+        model.addAttribute("books", bookService.searchByNameOrAuthor(query));
+        model.addAttribute("query", query);
+        return "books/search";
+    }
+
+
+
     @PostMapping()
     public String create(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "books/new";
         }
 
@@ -54,12 +102,14 @@ public class BooksController {
         model.addAttribute("book", bookService.findById(id));
         model.addAttribute("people", peopleService.findAll());
 
+
+
         return "books/show";
     }
 
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id){
+    public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("book", bookService.findById(id));
         return "books/edit";
     }
@@ -67,11 +117,11 @@ public class BooksController {
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult,
                          @PathVariable("id") int id) {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "books/edit";
         }
 
-        bookService.update(id ,book);
+        bookService.update(id, book);
         return "redirect:/books";
     }
 

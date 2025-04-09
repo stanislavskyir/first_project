@@ -72,8 +72,11 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("person", peopleService.findById(id));
-
         model.addAttribute("books_of_person", bookService.findByPersonId(id));
+
+
+        // Добавляем просроченные книги
+        model.addAttribute("overdueBooks", bookService.getOverdueBooksByPersonId(id));
 
         return "people/show";
     }

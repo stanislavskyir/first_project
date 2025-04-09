@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "book")
 public class Book {
@@ -28,6 +30,10 @@ public class Book {
     @Column(name = "year")
     @Max(value = 2024, message = "Year of birth should be less than 2025")
     private int year;
+
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
 
     public Book() {}
 
@@ -76,4 +82,14 @@ public class Book {
     public void setPerson(Person person) {
         this.person = person;
     }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+
 }
