@@ -6,14 +6,12 @@
 </head>
 <body>
 
-<!-- Информация о человеке -->
 <p th:text="${person.getName() + ', ' + person.getYearOfBirth()}">Person Info</p>
 <p th:text="${person.getId()}">Person ID</p>
 
 <br/>
 <hr/>
 
-<!-- Список всех книг пользователя -->
 <div th:if="${not #lists.isEmpty(books_of_person)}">
     <h3>Books taken:</h3>
     <div th:each="book : ${books_of_person}">
@@ -21,12 +19,10 @@
     </div>
 </div>
 
-<!-- Сообщение, если у пользователя нет книг -->
 <p th:unless="${not #lists.isEmpty(books_of_person)}">The person has not taken any books yet</p>
 
 <br/>
 
-<!-- Список просроченных книг -->
 <div th:if="${not #lists.isEmpty(overdueBooks)}">
     <hr/>
     <h3 style="color: red;">Overdue books:</h3>
@@ -38,10 +34,8 @@
 <br/>
 <hr/>
 
-<!-- Кнопка редактирования -->
 <a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>
 
-<!-- Форма удаления -->
 <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
     <input type="submit" value="Delete"/>
 </form>

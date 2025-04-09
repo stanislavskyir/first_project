@@ -5,14 +5,12 @@ import library.model.Person;
 import library.repositories.BooksRepository;
 import library.repositories.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,10 +47,6 @@ public class BookService {
         return booksRepository.findAll(sort);
     }
 
-//    public Page<Book> findAll(Pageable pageable) {
-//        return booksRepository.findAll(pageable);
-//    }
-
     public Book findById(int id) {
         Optional<Book> book = booksRepository.findById(id);
         return book.orElse(null);
@@ -83,7 +77,7 @@ public class BookService {
         Book book = findById(bookId);
         Person person = peopleRepository.findById(personId).get();
 
-        book.setCreatedAt(new Date()); // <--- ВОТ ЭТО ДОБАВЬ!
+        book.setCreatedAt(new Date());
         book.setPerson(person);
 
         booksRepository.save(book);

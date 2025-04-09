@@ -75,7 +75,6 @@ public class PeopleController {
         model.addAttribute("books_of_person", bookService.findByPersonId(id));
 
 
-        // Добавляем просроченные книги
         model.addAttribute("overdueBooks", bookService.getOverdueBooksByPersonId(id));
 
         return "people/show";

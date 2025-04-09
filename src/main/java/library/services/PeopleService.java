@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-//@Transactional(readOnly = true) //Потом разобраться с рид онли
 @Transactional
 public class PeopleService {
 

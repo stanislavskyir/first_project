@@ -10,42 +10,21 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/books")
 public class BooksController {
 
-    //private final BooksDao booksDao;
+
     private final BookService bookService;
 
     private final PeopleService peopleService;
-    //private final PersonDao personDao;
+
 
     @Autowired
     public BooksController(BookService bookService, PeopleService peopleService) {
         this.bookService = bookService;
         this.peopleService = peopleService;
     }
-
-//    @GetMapping()
-//    public String index(Model model) {
-//        model.addAttribute("books", bookService.findAll());
-//        return "books/index";
-//    }
-
-//    @GetMapping
-//    public String index(Model model, @RequestParam(value = "page", required = false) Integer  page,
-//                        @RequestParam(value = "books_per_page", required = false) Integer  booksPerPage) {
-//
-//        if (page != null && booksPerPage != null) {
-//            model.addAttribute("books", bookService.findWithPagination(page, booksPerPage));
-//        }else {
-//            model.addAttribute("books", bookService.findAll());
-//        }
-//
-//        return "books/index";
-//    }
 
     @GetMapping
     public String index(Model model,
