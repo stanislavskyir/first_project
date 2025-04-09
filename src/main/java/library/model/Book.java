@@ -1,26 +1,37 @@
 package library.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 
+@Entity
+@Table(name = "book")
 public class Book {
-    private int id;
-    private int personId;
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person person;
+
+    @Column(name = "name")
     @NotEmpty
     private String name;
 
+    @Column(name = "author")
     @NotEmpty
     private String author;
 
+    @Column(name = "year")
     @Max(value = 2024, message = "Year of birth should be less than 2025")
     private int year;
 
     public Book() {}
 
-    public Book(int id, int personId, String name, String author, int year) {
-        this.id = id;
-        this.personId = personId;
+    public Book(String name, String author, int year) {
         this.name = name;
         this.author = author;
         this.year = year;
@@ -32,14 +43,6 @@ public class Book {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(int personId) {
-        this.personId = personId;
     }
 
     public String getName() {
@@ -64,5 +67,13 @@ public class Book {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

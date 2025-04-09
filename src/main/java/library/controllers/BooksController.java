@@ -1,10 +1,9 @@
 package library.controllers;
 
 import jakarta.validation.Valid;
-import library.dao.BooksDao;
-import library.dao.PersonDao;
 import library.model.Book;
-import library.model.Person;
+import library.services.BookService;
+import library.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,18 +14,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/books")
 public class BooksController {
 
-    private final BooksDao booksDao;
-    private final PersonDao personDao;
+    //private final BooksDao booksDao;
+    private final BookService bookService;
+
+    private final PeopleService peopleService;
+    //private final PersonDao personDao;
 
     @Autowired
-    public BooksController(BooksDao booksDao, PersonDao personDao) {
-        this.booksDao = booksDao;
-        this.personDao = personDao;
+    public BooksController(BookService bookService, PeopleService peopleService) {
+        this.bookService = bookService;
+        this.peopleService = peopleService;
     }
 
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("books", booksDao.findAll());
+        model.addAttribute("books", bookService.findAll());
         return "books/index";
     }
 
@@ -43,14 +45,14 @@ public class BooksController {
             return "books/new";
         }
 
-        booksDao.save(book);
+        bookService.save(book);
         return "redirect:/books";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("book", booksDao.findById(id).get());
-        model.addAttribute("people", personDao.findAll());
+        model.addAttribute("book", bookService.findById(id));
+        model.addAttribute("people", peopleService.findAll());
 
         return "books/show";
     }
@@ -58,7 +60,7 @@ public class BooksController {
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id){
-        model.addAttribute("book", booksDao.findById(id).get());
+        model.addAttribute("book", bookService.findById(id));
         return "books/edit";
     }
 
@@ -69,20 +71,21 @@ public class BooksController {
             return "books/edit";
         }
 
-        booksDao.update(book);
+        bookService.update(id ,book);
         return "redirect:/books";
     }
 
 
     @PostMapping("/{id}/assign")
     public String assignBook(@PathVariable("id") int bookId, @RequestParam("personId") int personId) {
-        booksDao.assignToPerson(bookId, personId);
+
+        bookService.assignToPerson(bookId, personId);
         return "redirect:/books/" + bookId;
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        booksDao.delete(id);
+        bookService.delete(id);
         return "redirect:/books";
     }
 
